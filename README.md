@@ -31,6 +31,7 @@ Example Playbook
 ----------------
 
 
+```yaml
 ---
 - name: Backup Ansible controller
   hosts: localhost
@@ -45,7 +46,7 @@ Example Playbook
   vars_files: vault.yml
   roles:
     - backup_controller
-
+```
 
 License
 -------
