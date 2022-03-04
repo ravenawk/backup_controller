@@ -1,0 +1,81 @@
+---
+- name: Create configs directory if not already created
+  ansible.builtin.file:
+    path: "{{ config_location }}"
+    state: directory
+    mode: '0755'
+  tags: 
+    - always
+
+- name: Exporting using uri
+  ansible.builtin.uri:
+    url: https://{{ controller_hostname }}/api/v2/settings/all/
+    user: "{{ controller_username }}"
+    password: "{{ controller_password }}"
+    validate_certs: "{{ validate_certs }}"
+    force_basic_auth: True
+    method: GET
+  register: export_settings
+  tags: 
+    - always
+
+- name: Print out export
+  ansible.builtin.debug:
+    msg: "{{ export_settings.json }}"
+  tags: 
+    - never
+    - testing
+
+- name: Create settings var file
+  ansible.builtin.copy:
+    content: "{{ export_settings.json | to_nice_yaml() }}"
+    dest: "{{ config_location}}/settings_vars.yml"
+  tags: 
+    - always
+
+- name: Export using export module
+  ansible.controller.export:
+    controller_host: "{{ controller_hostname }}"
+    controller_username: "{{ controller_username }}"
+    controller_password: "{{ controller_password }}"
+    validate_certs: "{{ validate_certs }}"
+    all: true
+  register: all_export
+  tags: 
+    - always
+
+- name: Print out all export
+  ansible.builtin.debug:
+    msg: "{{ all_export | to_nice_yaml() }}"
+  tags: 
+    - never
+    - testing
+
+- name: Create backup file
+  ansible.builtin.copy:
+    content: "{{ all_export.assets | to_nice_yaml() }}"
+    dest: ./controller_vars_export.yml
+  tags: 
+    - never
+    - testing
+
+- name: Create individual backup files
+  ansible.builtin.template:
+    src: export_vars.j2
+    dest: "{{config_location }}/{{ item }}.yml"
+  tags: 
+    - always
+  loop:
+    - credentials
+    - credential_types
+    - execution_environments
+    - inventory
+    - inventory_sources
+    - job_templates
+    - notification_templates
+    - organizations
+    - projects
+    - teams
+    - users
+    - workflow_job_templates
+

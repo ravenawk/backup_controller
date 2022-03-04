@@ -1,0 +1,3 @@
+configs/*
+vault.yml
+controller_vars_export.yml

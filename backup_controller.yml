@@ -1,0 +1,15 @@
+---
+- name: Backup Ansible controller
+  hosts: localhost
+  connection: local
+  vars:
+    controller_hostname: "{{ controller_host }}"
+    controller_username: "{{ controller_user }}"
+    controller_password: "{{ controller_pass }}"
+    # Set in role defaults
+    #validate_certs: false
+    #config_location: ./configs
+  vars_files: vault.yml
+  roles:
+     - backup_controller
+
