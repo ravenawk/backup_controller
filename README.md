@@ -11,13 +11,13 @@ ansible.controller collection is needed to use the role, the role could be chang
 Role Variables
 --------------
 * used throughout role
-controller_host - variable giving a controller host to connect to
-controller_user - controller login user with admin privledges
-controller_pass - controller password for controller_user above
+controller_host - variable giving a controller host to connect  
+controller_user - controller login user with admin privledges  
+controller_pass - controller password for controller_user above  
 
-* set in defaults, change in playbook if needed
-validate_certs: false
-config_location: ./configs
+* set in defaults, change in playbook if needed  
+validate_certs: false  
+config_location: ./configs  
 
 
 Dependencies
